@@ -78,13 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "VerdeRCA — Gestión de Compromisos Ambientales" },
-      { name: "description", content: "Plataforma B2B para el seguimiento y cumplimiento de compromisos ambientales de Resoluciones de Calificación Ambiental (RCA) en Chile." },
+      { title: "Panel de Compromisos RCA — VerdeRCA" },
+      { name: "description", content: "Dashboard de control y cumplimiento de compromisos ambientales RCA para proyectos industriales y de construcción en Chile." },
       { name: "author", content: "VerdeRCA" },
-      { property: "og:title", content: "VerdeRCA — Gestión de Compromisos Ambientales RCA" },
-      { property: "og:description", content: "Controla, verifica y demuestra el cumplimiento de tus compromisos RCA en un solo lugar." },
+      { property: "og:title", content: "Panel de Compromisos RCA — VerdeRCA" },
+      { property: "og:description", content: "Dashboard de control y cumplimiento de compromisos ambientales RCA para proyectos industriales y de construcción en Chile." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Panel de Compromisos RCA — VerdeRCA" },
+      { name: "twitter:description", content: "Dashboard de control y cumplimiento de compromisos ambientales RCA para proyectos industriales y de construcción en Chile." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b5e21652-8e38-47ba-8ed1-032cd40a70fb" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b5e21652-8e38-47ba-8ed1-032cd40a70fb" },
     ],
     links: [
       {
