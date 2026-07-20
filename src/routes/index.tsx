@@ -506,32 +506,45 @@ function DashboardPage() {
               </div>
             </div>
 
-            {/* Mobile project switcher */}
-            <div className="lg:hidden">
-              <Select
-                value={`${selectedProjectId}::${selectedRcaId}`}
-                onValueChange={(v) => {
-                  const [pid, rid] = v.split("::");
-                  handleSelect(pid, rid);
-                }}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {projects.flatMap((p) =>
-                    p.rcas.map((r) => (
-                      <SelectItem
-                        key={`${p.id}::${r.id}`}
-                        value={`${p.id}::${r.id}`}
-                      >
-                        {r.code}
-                      </SelectItem>
-                    )),
-                  )}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-2">
+              {/* Read-only banner for auditor */}
+              {user?.role === "auditor" && (
+                <span className="hidden items-center gap-1 rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground md:inline-flex">
+                  <LockIcon className="h-3 w-3" />
+                  Solo lectura
+                </span>
+              )}
+
+              {/* Mobile project switcher */}
+              <div className="lg:hidden">
+                <Select
+                  value={`${selectedProjectId}::${selectedRcaId}`}
+                  onValueChange={(v) => {
+                    const [pid, rid] = v.split("::");
+                    handleSelect(pid, rid);
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.flatMap((p) =>
+                      p.rcas.map((r) => (
+                        <SelectItem
+                          key={`${p.id}::${r.id}`}
+                          value={`${p.id}::${r.id}`}
+                        >
+                          {r.code}
+                        </SelectItem>
+                      )),
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <UserMenu />
             </div>
+
           </div>
         </header>
 
