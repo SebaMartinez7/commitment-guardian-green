@@ -801,8 +801,10 @@ function CommitmentRow({
         <Input
           value={commitment.responsible}
           onChange={(e) => onChange({ responsible: e.target.value })}
-          className="h-8 border-0 bg-transparent px-2 shadow-none focus-visible:ring-1"
+          disabled={!canEdit}
+          className="h-8 border-0 bg-transparent px-2 shadow-none focus-visible:ring-1 disabled:opacity-80"
         />
+
       </TableCell>
       <TableCell>
         <StatusBadge status={commitment.status} />
