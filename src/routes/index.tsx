@@ -823,15 +823,17 @@ function CommitmentRow({
               <FileCheck2 className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate">{commitment.verificationFile}</span>
             </span>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => fileRef.current?.click()}
-            >
-              Reemplazar
-            </Button>
+            {canUpload && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => fileRef.current?.click()}
+              >
+                Reemplazar
+              </Button>
+            )}
           </div>
-        ) : (
+        ) : canUpload ? (
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -858,7 +860,13 @@ function CommitmentRow({
               Subir Verificación
             </Button>
           </div>
+        ) : (
+          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+            <LockIcon className="h-3 w-3" />
+            Sin permisos
+          </span>
         )}
+
       </TableCell>
     </TableRow>
   );
