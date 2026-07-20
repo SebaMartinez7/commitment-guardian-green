@@ -753,7 +753,9 @@ function CommitmentRow({
         <Select
           value={commitment.frequency}
           onValueChange={(v) => onChange({ frequency: v as Frequency })}
+          disabled={!canEdit}
         >
+
           <SelectTrigger className="h-8 w-[130px]">
             <SelectValue />
           </SelectTrigger>
