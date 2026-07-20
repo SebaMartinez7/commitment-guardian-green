@@ -776,8 +776,10 @@ function CommitmentRow({
               type="date"
               value={commitment.dueDate}
               onChange={(e) => onChange({ dueDate: e.target.value })}
-              className="cursor-pointer bg-transparent text-sm outline-none focus:ring-1 focus:ring-ring"
+              disabled={!canEdit}
+              className="cursor-pointer bg-transparent text-sm outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-80"
             />
+
           </label>
           <span
             className={cn(
