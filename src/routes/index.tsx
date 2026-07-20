@@ -729,7 +729,9 @@ function CommitmentRow({
         <Select
           value={commitment.component}
           onValueChange={(v) => onChange({ component: v as EnvComponent })}
+          disabled={!canEdit}
         >
+
           <SelectTrigger className="h-8 border-0 bg-transparent px-2 shadow-none focus:ring-1 focus:ring-ring">
             <SelectValue asChild>
               <ComponentTag c={commitment.component} />
