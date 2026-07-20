@@ -653,8 +653,11 @@ function DashboardPage() {
                     <CommitmentRow
                       key={c.id}
                       commitment={c}
+                      canEdit={can.edit}
+                      canUpload={can.upload}
                       onChange={(patch) => updateCommitment(c.id, patch)}
                     />
+
                   ))}
                 </TableBody>
               </Table>
