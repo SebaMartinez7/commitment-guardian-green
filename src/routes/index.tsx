@@ -59,8 +59,20 @@ import {
   type Project,
   type Status,
 } from "@/lib/rca-data";
+import { ROLE_LABELS, ROLE_SHORT, useAuth, type Role } from "@/lib/auth";
+import { LoginScreen } from "@/components/LoginScreen";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/")({
+
   head: () => ({
     meta: [
       { title: "Panel de Compromisos RCA — VerdeRCA" },
