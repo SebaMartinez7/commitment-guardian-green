@@ -12,7 +12,11 @@ import {
   ChevronRight,
   Building2,
   CalendarDays,
+  LogOut,
+  ShieldCheck,
+  Lock as LockIcon,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -55,8 +59,20 @@ import {
   type Project,
   type Status,
 } from "@/lib/rca-data";
+import { ROLE_LABELS, ROLE_SHORT, useAuth, type Role } from "@/lib/auth";
+import { LoginScreen } from "@/components/LoginScreen";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/")({
+
   head: () => ({
     meta: [
       { title: "Panel de Compromisos RCA — VerdeRCA" },
@@ -67,7 +83,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: DashboardPage,
+  component: RootView,
 });
 
 /* ---------------- Helpers ---------------- */
@@ -286,15 +302,89 @@ function MetricCard({
   );
 }
 
+/* ---------------- Auth Gate & User Menu ---------------- */
+
+function RootView() {
+  const { user } = useAuth();
+  if (!user) return <LoginScreen />;
+  return <DashboardPage />;
+}
+
+function roleBadgeTone(role: Role) {
+  switch (role) {
+    case "admin":
+      return "bg-primary/15 text-primary border-primary/30";
+    case "contractor":
+      return "bg-warning/25 text-warning-foreground border-warning/40";
+    case "auditor":
+      return "bg-muted text-muted-foreground border-border";
+  }
+}
+
+function UserMenu() {
+  const { user, signOut } = useAuth();
+  if (!user) return null;
+  const initials = user.name
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center gap-2 rounded-full border border-border bg-background px-1.5 py-1 pr-3 transition-colors hover:bg-accent">
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-primary text-xs font-semibold text-primary-foreground">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="hidden text-left sm:block">
+            <div className="text-xs font-semibold leading-tight text-foreground">
+              {user.name}
+            </div>
+            <div className="text-[10px] leading-tight text-muted-foreground">
+              {ROLE_SHORT[user.role]}
+            </div>
+          </div>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuLabel>
+          <div className="flex flex-col gap-1">
+            <div className="text-sm font-semibold">{user.name}</div>
+            <div className="text-xs font-normal text-muted-foreground">{user.email}</div>
+            <Badge
+              variant="outline"
+              className={cn("mt-1 w-fit gap-1 text-[10px]", roleBadgeTone(user.role))}
+            >
+              <ShieldCheck className="h-3 w-3" />
+              {ROLE_LABELS[user.role]}
+            </Badge>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={signOut} className="text-danger focus:text-danger">
+          <LogOut className="mr-2 h-4 w-4" />
+          Cerrar sesión
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 /* ---------------- Main Page ---------------- */
 
 function DashboardPage() {
+  const { can, user } = useAuth();
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id);
   const [selectedRcaId, setSelectedRcaId] = useState(projects[0].rcas[0].id);
   const [search, setSearch] = useState("");
   const [filterComponent, setFilterComponent] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId)!;
   const selectedRca =
@@ -416,32 +506,45 @@ function DashboardPage() {
               </div>
             </div>
 
-            {/* Mobile project switcher */}
-            <div className="lg:hidden">
-              <Select
-                value={`${selectedProjectId}::${selectedRcaId}`}
-                onValueChange={(v) => {
-                  const [pid, rid] = v.split("::");
-                  handleSelect(pid, rid);
-                }}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {projects.flatMap((p) =>
-                    p.rcas.map((r) => (
-                      <SelectItem
-                        key={`${p.id}::${r.id}`}
-                        value={`${p.id}::${r.id}`}
-                      >
-                        {r.code}
-                      </SelectItem>
-                    )),
-                  )}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-2">
+              {/* Read-only banner for auditor */}
+              {user?.role === "auditor" && (
+                <span className="hidden items-center gap-1 rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground md:inline-flex">
+                  <LockIcon className="h-3 w-3" />
+                  Solo lectura
+                </span>
+              )}
+
+              {/* Mobile project switcher */}
+              <div className="lg:hidden">
+                <Select
+                  value={`${selectedProjectId}::${selectedRcaId}`}
+                  onValueChange={(v) => {
+                    const [pid, rid] = v.split("::");
+                    handleSelect(pid, rid);
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.flatMap((p) =>
+                      p.rcas.map((r) => (
+                        <SelectItem
+                          key={`${p.id}::${r.id}`}
+                          value={`${p.id}::${r.id}`}
+                        >
+                          {r.code}
+                        </SelectItem>
+                      )),
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <UserMenu />
             </div>
+
           </div>
         </header>
 
@@ -550,8 +653,11 @@ function DashboardPage() {
                     <CommitmentRow
                       key={c.id}
                       commitment={c}
+                      canEdit={can.edit}
+                      canUpload={can.upload}
                       onChange={(patch) => updateCommitment(c.id, patch)}
                     />
+
                   ))}
                 </TableBody>
               </Table>
@@ -571,13 +677,18 @@ function DashboardPage() {
 
 function CommitmentRow({
   commitment,
+  canEdit,
+  canUpload,
   onChange,
 }: {
   commitment: Commitment;
+  canEdit: boolean;
+  canUpload: boolean;
   onChange: (patch: Partial<Commitment>) => void;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+
 
   const handleFile = (file: File | undefined) => {
     if (!file) return;
@@ -618,7 +729,9 @@ function CommitmentRow({
         <Select
           value={commitment.component}
           onValueChange={(v) => onChange({ component: v as EnvComponent })}
+          disabled={!canEdit}
         >
+
           <SelectTrigger className="h-8 border-0 bg-transparent px-2 shadow-none focus:ring-1 focus:ring-ring">
             <SelectValue asChild>
               <ComponentTag c={commitment.component} />
@@ -640,7 +753,9 @@ function CommitmentRow({
         <Select
           value={commitment.frequency}
           onValueChange={(v) => onChange({ frequency: v as Frequency })}
+          disabled={!canEdit}
         >
+
           <SelectTrigger className="h-8 w-[130px]">
             <SelectValue />
           </SelectTrigger>
@@ -661,8 +776,10 @@ function CommitmentRow({
               type="date"
               value={commitment.dueDate}
               onChange={(e) => onChange({ dueDate: e.target.value })}
-              className="cursor-pointer bg-transparent text-sm outline-none focus:ring-1 focus:ring-ring"
+              disabled={!canEdit}
+              className="cursor-pointer bg-transparent text-sm outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-80"
             />
+
           </label>
           <span
             className={cn(
@@ -684,8 +801,10 @@ function CommitmentRow({
         <Input
           value={commitment.responsible}
           onChange={(e) => onChange({ responsible: e.target.value })}
-          className="h-8 border-0 bg-transparent px-2 shadow-none focus-visible:ring-1"
+          disabled={!canEdit}
+          className="h-8 border-0 bg-transparent px-2 shadow-none focus-visible:ring-1 disabled:opacity-80"
         />
+
       </TableCell>
       <TableCell>
         <StatusBadge status={commitment.status} />
@@ -704,15 +823,17 @@ function CommitmentRow({
               <FileCheck2 className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate">{commitment.verificationFile}</span>
             </span>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => fileRef.current?.click()}
-            >
-              Reemplazar
-            </Button>
+            {canUpload && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => fileRef.current?.click()}
+              >
+                Reemplazar
+              </Button>
+            )}
           </div>
-        ) : (
+        ) : canUpload ? (
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -739,7 +860,13 @@ function CommitmentRow({
               Subir Verificación
             </Button>
           </div>
+        ) : (
+          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+            <LockIcon className="h-3 w-3" />
+            Sin permisos
+          </span>
         )}
+
       </TableCell>
     </TableRow>
   );
