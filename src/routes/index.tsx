@@ -677,13 +677,18 @@ function DashboardPage() {
 
 function CommitmentRow({
   commitment,
+  canEdit,
+  canUpload,
   onChange,
 }: {
   commitment: Commitment;
+  canEdit: boolean;
+  canUpload: boolean;
   onChange: (patch: Partial<Commitment>) => void;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+
 
   const handleFile = (file: File | undefined) => {
     if (!file) return;
