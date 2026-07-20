@@ -83,7 +83,7 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: DashboardPage,
+  component: RootView,
 });
 
 /* ---------------- Helpers ---------------- */
