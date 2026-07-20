@@ -377,13 +377,14 @@ function UserMenu() {
 /* ---------------- Main Page ---------------- */
 
 function DashboardPage() {
-
+  const { can, user } = useAuth();
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id);
   const [selectedRcaId, setSelectedRcaId] = useState(projects[0].rcas[0].id);
   const [search, setSearch] = useState("");
   const [filterComponent, setFilterComponent] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId)!;
   const selectedRca =
