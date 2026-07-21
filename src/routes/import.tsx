@@ -48,6 +48,7 @@ import {
   type Commitment,
   type EnvComponent,
   type Frequency,
+  type Project,
   type RCA,
 } from "@/lib/rca-data";
 
