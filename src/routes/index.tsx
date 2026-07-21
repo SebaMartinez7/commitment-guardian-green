@@ -60,7 +60,9 @@ import {
   type Status,
 } from "@/lib/rca-data";
 import { ROLE_LABELS, ROLE_SHORT, useAuth, type Role } from "@/lib/auth";
+import { useProjects } from "@/lib/projects-store";
 import { LoginScreen } from "@/components/LoginScreen";
+import { AppNav } from "@/components/AppNav";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
