@@ -395,6 +395,7 @@ function ImportPage() {
       toast.error("No hay compromisos para importar");
       return;
     }
+    const projectId = `proj-${Date.now()}`;
     const rcaId = `rca-${Date.now()}`;
     const rca: RCA = {
       id: rcaId,
@@ -404,16 +405,26 @@ function ImportPage() {
         id: `${rcaId}-${c.code}`,
         code: c.code,
         component: c.component,
-        description: `[${c.phase}] ${c.title}. ${c.requirement} Medio de verificación sugerido: ${c.verificationMethod}.`,
+        description: `[Punto ${c.sourcePoint}] [${c.phase}] ${c.title}. ${c.requirement} Medio de verificación sugerido: ${c.verificationMethod}.`,
         frequency: c.frequency,
         dueDate: c.dueDate,
         responsible: c.responsible,
         status: "Pendiente",
       })),
     };
-    addExtractedRca(targetProjectId, rca);
-    toast.success("Compromisos importados", {
-      description: `${rca.commitments.length} compromisos añadidos al dashboard.`,
+    const project: Project = {
+      id: projectId,
+      name: extracted.shortProjectName,
+      location: extracted.region,
+      rcas: [rca],
+    };
+    addProjectWithRca(project);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("verderca:selectProject", projectId);
+      window.sessionStorage.setItem("verderca:selectRca", rcaId);
+    }
+    toast.success("Proyecto creado e importado", {
+      description: `${rca.commitments.length} compromisos añadidos a "${project.name}".`,
     });
     navigate({ to: "/" });
   };
