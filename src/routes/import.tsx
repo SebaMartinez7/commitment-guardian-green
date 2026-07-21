@@ -301,9 +301,10 @@ type Stage = "upload" | "processing" | "review";
 
 const STEPS = [
   "Leyendo documento RCA...",
-  "Identificando componentes ambientales (Fauna, Ruido, Agua)...",
-  "Extrayendo compromisos y plazos de vencimiento...",
-  "Sugiriendo medios de verificación...",
+  "Creando proyecto y resumiendo nombre con IA...",
+  "Analizando compromisos en los puntos 8°, 9°, 10°, 14, 15, 16, 20 y 21...",
+  "Parseando tablas anidadas de los puntos 8°, 9° y 10°...",
+  "Mapeando componente, fase, frecuencia y medio de verificación...",
 ];
 
 function ImportPage() {
