@@ -380,8 +380,18 @@ function UserMenu() {
 function DashboardPage() {
   const { can, user } = useAuth();
   const { projects, updateCommitment: storeUpdate } = useProjects();
-  const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id);
-  const [selectedRcaId, setSelectedRcaId] = useState(projects[0].rcas[0].id);
+  const initialSelection = (() => {
+    if (typeof window === "undefined") return { pid: projects[0].id, rid: projects[0].rcas[0].id };
+    const pid = window.sessionStorage.getItem("verderca:selectProject");
+    const rid = window.sessionStorage.getItem("verderca:selectRca");
+    if (pid) window.sessionStorage.removeItem("verderca:selectProject");
+    if (rid) window.sessionStorage.removeItem("verderca:selectRca");
+    const proj = projects.find((p) => p.id === pid) ?? projects[0];
+    const rca = proj.rcas.find((r) => r.id === rid) ?? proj.rcas[0];
+    return { pid: proj.id, rid: rca.id };
+  })();
+  const [selectedProjectId, setSelectedProjectId] = useState(initialSelection.pid);
+  const [selectedRcaId, setSelectedRcaId] = useState(initialSelection.rid);
   const [search, setSearch] = useState("");
   const [filterComponent, setFilterComponent] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
