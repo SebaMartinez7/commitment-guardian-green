@@ -808,6 +808,11 @@ function ReviewStage({
                     />
                   </TableCell>
                   <TableCell>
+                    <Badge variant="outline" className="font-mono text-xs">
+                      {c.sourcePoint}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
                     <Input
                       value={c.title}
                       onChange={(e) => onUpdateRow(c.id, { title: e.target.value })}
