@@ -378,7 +378,7 @@ function UserMenu() {
 
 function DashboardPage() {
   const { can, user } = useAuth();
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const { projects, updateCommitment: storeUpdate } = useProjects();
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id);
   const [selectedRcaId, setSelectedRcaId] = useState(projects[0].rcas[0].id);
   const [search, setSearch] = useState("");
@@ -386,7 +386,8 @@ function DashboardPage() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
 
-  const selectedProject = projects.find((p) => p.id === selectedProjectId)!;
+  const selectedProject =
+    projects.find((p) => p.id === selectedProjectId) ?? projects[0];
   const selectedRca =
     selectedProject.rcas.find((r) => r.id === selectedRcaId) ??
     selectedProject.rcas[0];
@@ -425,25 +426,7 @@ function DashboardPage() {
   };
 
   function updateCommitment(id: string, patch: Partial<Commitment>) {
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id !== selectedProjectId
-          ? p
-          : {
-              ...p,
-              rcas: p.rcas.map((r) =>
-                r.id !== selectedRcaId
-                  ? r
-                  : {
-                      ...r,
-                      commitments: r.commitments.map((c) =>
-                        c.id === id ? { ...c, ...patch } : c,
-                      ),
-                    },
-              ),
-            },
-      ),
-    );
+    storeUpdate(selectedProjectId, selectedRcaId, id, patch);
   }
 
   function handleSelect(projectId: string, rcaId: string) {
