@@ -310,7 +310,7 @@ const STEPS = [
 function ImportPage() {
   const { can, user } = useAuth();
   const navigate = useNavigate();
-  const { projects, addExtractedRca } = useProjects();
+  const { addProjectWithRca } = useProjects();
 
   const [stage, setStage] = useState<Stage>("upload");
   const [file, setFile] = useState<File | null>(null);
@@ -318,7 +318,6 @@ function ImportPage() {
   const [progress, setProgress] = useState(0);
   const [stepIdx, setStepIdx] = useState(0);
   const [extracted, setExtracted] = useState<ExtractedRca | null>(null);
-  const [targetProjectId, setTargetProjectId] = useState<string>(projects[0].id);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
