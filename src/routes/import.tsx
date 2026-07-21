@@ -121,9 +121,19 @@ const isoOffset = (days: number) => {
 
 function mockExtract(fileName: string): ExtractedRca {
   const base = fileName.replace(/\.pdf$/i, "").slice(0, 40) || "RCA";
+  // Simulated AI-generated concise project name (2-4 words)
+  const shortNames = [
+    "Planta Solar Atacama",
+    "Ampliación Puerto Norte",
+    "Línea de Transmisión Andes",
+    "Expansión Minera Cordillera",
+    "Parque Eólico Costero",
+  ];
+  const shortProjectName = shortNames[Math.floor(Math.random() * shortNames.length)];
   return {
     code: `RCA N° ${Math.floor(100 + Math.random() * 800)}/2026`,
     projectName: `Proyecto ${base}`,
+    shortProjectName,
     region: "Región de Antofagasta",
     evalType: Math.random() > 0.5 ? "EIA" : "DIA",
     commitments: [
@@ -139,6 +149,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(45),
         verificationMethod: "Informe de rescate con registro fotográfico y planillas GPS",
         responsible: "Consultora Ambiental",
+        sourcePoint: "8°",
       },
       {
         id: crypto.randomUUID(),
@@ -152,6 +163,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(90),
         verificationMethod: "Informe de monitoreo trimestral con base de datos de avistamientos",
         responsible: "Consultora Ambiental",
+        sourcePoint: "8°",
       },
       {
         id: crypto.randomUUID(),
@@ -165,6 +177,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(60),
         verificationMethod: "Informe acústico firmado por profesional competente",
         responsible: "Encargado Ambiental",
+        sourcePoint: "9°",
       },
       {
         id: crypto.randomUUID(),
@@ -178,6 +191,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(30),
         verificationMethod: "Bitácora de humectación y reporte fotográfico mensual",
         responsible: "Jefe de Terreno",
+        sourcePoint: "9°",
       },
       {
         id: crypto.randomUUID(),
@@ -191,6 +205,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(120),
         verificationMethod: "Análisis de laboratorio acreditado ISO 17025",
         responsible: "Consultora Hidrogeológica",
+        sourcePoint: "10°",
       },
       {
         id: crypto.randomUUID(),
@@ -204,6 +219,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(20),
         verificationMethod: "Informe arqueológico mensual visado por el CMN",
         responsible: "Arqueólogo/a Residente",
+        sourcePoint: "10°",
       },
       {
         id: crypto.randomUUID(),
@@ -217,6 +233,63 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(75),
         verificationMethod: "Guías de despacho y declaración SIDREP",
         responsible: "Encargado de Residuos",
+        sourcePoint: "14",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "CP-08",
+        title: "Programa de comunicación con comunidades",
+        component: "Suelo",
+        phase: "Operación",
+        requirement:
+          "Mantener canal formal de información con comunidades del área de influencia, con reuniones periódicas.",
+        frequency: "Semestral",
+        dueDate: isoOffset(150),
+        verificationMethod: "Actas de reuniones y registro de asistentes",
+        responsible: "Relaciones Comunitarias",
+        sourcePoint: "15",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "SG-09",
+        title: "Seguimiento ambiental consolidado",
+        component: "Agua",
+        phase: "Operación",
+        requirement:
+          "Elaborar reporte consolidado anual de seguimiento ambiental y remitirlo a la SMA.",
+        frequency: "Anual",
+        dueDate: isoOffset(200),
+        verificationMethod: "Informe consolidado presentado en SNIFA",
+        responsible: "Gerencia Ambiental",
+        sourcePoint: "16",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "CN-10",
+        title: "Notificación de inicio de fase de construcción",
+        component: "Suelo",
+        phase: "Construcción",
+        requirement:
+          "Comunicar formalmente a la Superintendencia el inicio de la fase de construcción del proyecto.",
+        frequency: "Única vez",
+        dueDate: isoOffset(10),
+        verificationMethod: "Oficio de notificación con acuse de recibo",
+        responsible: "Gerencia Ambiental",
+        sourcePoint: "20",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "CI-11",
+        title: "Plan de cierre y abandono",
+        component: "Suelo",
+        phase: "Cierre",
+        requirement:
+          "Ejecutar plan de cierre progresivo con restauración morfológica y revegetación del área intervenida.",
+        frequency: "Única vez",
+        dueDate: isoOffset(365),
+        verificationMethod: "Informe de cierre con verificación en terreno",
+        responsible: "Consultora Ambiental",
+        sourcePoint: "21",
       },
     ],
   };
