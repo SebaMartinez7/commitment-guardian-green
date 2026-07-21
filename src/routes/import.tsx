@@ -913,7 +913,7 @@ function ReviewStage({
               ))}
               {data.commitments.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-8 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={10} className="py-8 text-center text-sm text-muted-foreground">
                     No hay compromisos. Vuelve a cargar el PDF.
                   </TableCell>
                 </TableRow>
