@@ -45,9 +45,13 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const addProjectWithRca = useCallback((project: Project) => {
+    setProjects((prev) => [...prev, project]);
+  }, []);
+
   const value = useMemo<Ctx>(
-    () => ({ projects, setProjects, updateCommitment, addExtractedRca }),
-    [projects, updateCommitment, addExtractedRca],
+    () => ({ projects, setProjects, updateCommitment, addExtractedRca, addProjectWithRca }),
+    [projects, updateCommitment, addExtractedRca, addProjectWithRca],
   );
 
   return <ProjectsContext.Provider value={value}>{children}</ProjectsContext.Provider>;
