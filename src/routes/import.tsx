@@ -698,9 +698,6 @@ function ProcessingStage({
 
 function ReviewStage({
   data,
-  projects,
-  targetProjectId,
-  setTargetProjectId,
   onEditMeta,
   onUpdateRow,
   onRemoveRow,
@@ -709,9 +706,6 @@ function ReviewStage({
   canImport,
 }: {
   data: ExtractedRca;
-  projects: { id: string; name: string }[];
-  targetProjectId: string;
-  setTargetProjectId: (v: string) => void;
   onEditMeta: (patch: Partial<ExtractedRca>) => void;
   onUpdateRow: (id: string, patch: Partial<ExtractedCommitment>) => void;
   onRemoveRow: (id: string) => void;
