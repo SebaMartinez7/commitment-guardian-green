@@ -77,6 +77,8 @@ export const Route = createFileRoute("/import")({
 type Phase = "Construcción" | "Operación" | "Cierre";
 const PHASES: Phase[] = ["Construcción", "Operación", "Cierre"];
 type EvalType = "DIA" | "EIA";
+type SourcePoint = "8°" | "9°" | "10°" | "14" | "15" | "16" | "20" | "21";
+const SOURCE_POINTS: SourcePoint[] = ["8°", "9°", "10°", "14", "15", "16", "20", "21"];
 
 type ExtractedCommitment = {
   id: string;
@@ -89,11 +91,13 @@ type ExtractedCommitment = {
   dueDate: string;
   verificationMethod: string;
   responsible: string;
+  sourcePoint: SourcePoint;
 };
 
 type ExtractedRca = {
   code: string;
   projectName: string;
+  shortProjectName: string;
   region: string;
   evalType: EvalType;
   commitments: ExtractedCommitment[];
