@@ -52,7 +52,6 @@ import { cn } from "@/lib/utils";
 import {
   COMPONENTS,
   FREQUENCIES,
-  initialProjects,
   type Commitment,
   type EnvComponent,
   type Frequency,
@@ -60,7 +59,9 @@ import {
   type Status,
 } from "@/lib/rca-data";
 import { ROLE_LABELS, ROLE_SHORT, useAuth, type Role } from "@/lib/auth";
+import { useProjects } from "@/lib/projects-store";
 import { LoginScreen } from "@/components/LoginScreen";
+import { AppNav } from "@/components/AppNav";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -378,7 +379,7 @@ function UserMenu() {
 
 function DashboardPage() {
   const { can, user } = useAuth();
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const { projects, updateCommitment: storeUpdate } = useProjects();
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id);
   const [selectedRcaId, setSelectedRcaId] = useState(projects[0].rcas[0].id);
   const [search, setSearch] = useState("");
@@ -386,7 +387,8 @@ function DashboardPage() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
 
-  const selectedProject = projects.find((p) => p.id === selectedProjectId)!;
+  const selectedProject =
+    projects.find((p) => p.id === selectedProjectId) ?? projects[0];
   const selectedRca =
     selectedProject.rcas.find((r) => r.id === selectedRcaId) ??
     selectedProject.rcas[0];
@@ -425,25 +427,7 @@ function DashboardPage() {
   };
 
   function updateCommitment(id: string, patch: Partial<Commitment>) {
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.id !== selectedProjectId
-          ? p
-          : {
-              ...p,
-              rcas: p.rcas.map((r) =>
-                r.id !== selectedRcaId
-                  ? r
-                  : {
-                      ...r,
-                      commitments: r.commitments.map((c) =>
-                        c.id === id ? { ...c, ...patch } : c,
-                      ),
-                    },
-              ),
-            },
-      ),
-    );
+    storeUpdate(selectedProjectId, selectedRcaId, id, patch);
   }
 
   function handleSelect(projectId: string, rcaId: string) {
@@ -507,6 +491,7 @@ function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
+              <AppNav />
               {/* Read-only banner for auditor */}
               {user?.role === "auditor" && (
                 <span className="hidden items-center gap-1 rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground md:inline-flex">
