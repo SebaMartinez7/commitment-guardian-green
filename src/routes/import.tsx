@@ -919,27 +919,18 @@ function ReviewStage({
 
       {/* Approve bar */}
       <Card className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1 sm:min-w-[280px]">
-          <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Importar a proyecto
-          </label>
-          <Select value={targetProjectId} onValueChange={setTargetProjectId}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {projects.map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Nuevo proyecto
+          </span>
+          <span className="text-sm font-semibold text-foreground">
+            {data.shortProjectName}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Se creará automáticamente con {data.commitments.length} compromisos vinculados a {data.code}.
+          </span>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-3">
-          <span className="text-xs text-muted-foreground">
-            Se creará una nueva RCA con {data.commitments.length} compromisos.
-          </span>
           <Button
             size="lg"
             onClick={onApprove}
