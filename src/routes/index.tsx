@@ -492,6 +492,7 @@ function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
+              <AppNav />
               {/* Read-only banner for auditor */}
               {user?.role === "auditor" && (
                 <span className="hidden items-center gap-1 rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground md:inline-flex">
