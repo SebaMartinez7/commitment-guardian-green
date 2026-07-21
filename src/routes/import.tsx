@@ -493,9 +493,6 @@ function ImportPage() {
         {stage === "review" && extracted && (
           <ReviewStage
             data={extracted}
-            projects={projects}
-            targetProjectId={targetProjectId}
-            setTargetProjectId={setTargetProjectId}
             onEditMeta={(patch) =>
               setExtracted((prev) => (prev ? { ...prev, ...patch } : prev))
             }
