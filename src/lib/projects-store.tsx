@@ -6,6 +6,7 @@ type Ctx = {
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   updateCommitment: (projectId: string, rcaId: string, commitmentId: string, patch: Partial<Commitment>) => void;
   addExtractedRca: (projectId: string, rca: RCA) => void;
+  addProjectWithRca: (project: Project) => void;
 };
 
 const ProjectsContext = createContext<Ctx | null>(null);
@@ -44,9 +45,13 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const addProjectWithRca = useCallback((project: Project) => {
+    setProjects((prev) => [...prev, project]);
+  }, []);
+
   const value = useMemo<Ctx>(
-    () => ({ projects, setProjects, updateCommitment, addExtractedRca }),
-    [projects, updateCommitment, addExtractedRca],
+    () => ({ projects, setProjects, updateCommitment, addExtractedRca, addProjectWithRca }),
+    [projects, updateCommitment, addExtractedRca, addProjectWithRca],
   );
 
   return <ProjectsContext.Provider value={value}>{children}</ProjectsContext.Provider>;

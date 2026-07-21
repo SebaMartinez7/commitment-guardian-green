@@ -48,6 +48,7 @@ import {
   type Commitment,
   type EnvComponent,
   type Frequency,
+  type Project,
   type RCA,
 } from "@/lib/rca-data";
 
@@ -76,6 +77,8 @@ export const Route = createFileRoute("/import")({
 type Phase = "Construcción" | "Operación" | "Cierre";
 const PHASES: Phase[] = ["Construcción", "Operación", "Cierre"];
 type EvalType = "DIA" | "EIA";
+type SourcePoint = "8°" | "9°" | "10°" | "14" | "15" | "16" | "20" | "21";
+const SOURCE_POINTS: SourcePoint[] = ["8°", "9°", "10°", "14", "15", "16", "20", "21"];
 
 type ExtractedCommitment = {
   id: string;
@@ -88,11 +91,13 @@ type ExtractedCommitment = {
   dueDate: string;
   verificationMethod: string;
   responsible: string;
+  sourcePoint: SourcePoint;
 };
 
 type ExtractedRca = {
   code: string;
   projectName: string;
+  shortProjectName: string;
   region: string;
   evalType: EvalType;
   commitments: ExtractedCommitment[];
@@ -116,9 +121,19 @@ const isoOffset = (days: number) => {
 
 function mockExtract(fileName: string): ExtractedRca {
   const base = fileName.replace(/\.pdf$/i, "").slice(0, 40) || "RCA";
+  // Simulated AI-generated concise project name (2-4 words)
+  const shortNames = [
+    "Planta Solar Atacama",
+    "Ampliación Puerto Norte",
+    "Línea de Transmisión Andes",
+    "Expansión Minera Cordillera",
+    "Parque Eólico Costero",
+  ];
+  const shortProjectName = shortNames[Math.floor(Math.random() * shortNames.length)];
   return {
     code: `RCA N° ${Math.floor(100 + Math.random() * 800)}/2026`,
     projectName: `Proyecto ${base}`,
+    shortProjectName,
     region: "Región de Antofagasta",
     evalType: Math.random() > 0.5 ? "EIA" : "DIA",
     commitments: [
@@ -134,6 +149,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(45),
         verificationMethod: "Informe de rescate con registro fotográfico y planillas GPS",
         responsible: "Consultora Ambiental",
+        sourcePoint: "8°",
       },
       {
         id: crypto.randomUUID(),
@@ -147,6 +163,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(90),
         verificationMethod: "Informe de monitoreo trimestral con base de datos de avistamientos",
         responsible: "Consultora Ambiental",
+        sourcePoint: "8°",
       },
       {
         id: crypto.randomUUID(),
@@ -160,6 +177,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(60),
         verificationMethod: "Informe acústico firmado por profesional competente",
         responsible: "Encargado Ambiental",
+        sourcePoint: "9°",
       },
       {
         id: crypto.randomUUID(),
@@ -173,6 +191,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(30),
         verificationMethod: "Bitácora de humectación y reporte fotográfico mensual",
         responsible: "Jefe de Terreno",
+        sourcePoint: "9°",
       },
       {
         id: crypto.randomUUID(),
@@ -186,6 +205,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(120),
         verificationMethod: "Análisis de laboratorio acreditado ISO 17025",
         responsible: "Consultora Hidrogeológica",
+        sourcePoint: "10°",
       },
       {
         id: crypto.randomUUID(),
@@ -199,6 +219,7 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(20),
         verificationMethod: "Informe arqueológico mensual visado por el CMN",
         responsible: "Arqueólogo/a Residente",
+        sourcePoint: "10°",
       },
       {
         id: crypto.randomUUID(),
@@ -212,6 +233,63 @@ function mockExtract(fileName: string): ExtractedRca {
         dueDate: isoOffset(75),
         verificationMethod: "Guías de despacho y declaración SIDREP",
         responsible: "Encargado de Residuos",
+        sourcePoint: "14",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "CP-08",
+        title: "Programa de comunicación con comunidades",
+        component: "Suelo",
+        phase: "Operación",
+        requirement:
+          "Mantener canal formal de información con comunidades del área de influencia, con reuniones periódicas.",
+        frequency: "Semestral",
+        dueDate: isoOffset(150),
+        verificationMethod: "Actas de reuniones y registro de asistentes",
+        responsible: "Relaciones Comunitarias",
+        sourcePoint: "15",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "SG-09",
+        title: "Seguimiento ambiental consolidado",
+        component: "Agua",
+        phase: "Operación",
+        requirement:
+          "Elaborar reporte consolidado anual de seguimiento ambiental y remitirlo a la SMA.",
+        frequency: "Anual",
+        dueDate: isoOffset(200),
+        verificationMethod: "Informe consolidado presentado en SNIFA",
+        responsible: "Gerencia Ambiental",
+        sourcePoint: "16",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "CN-10",
+        title: "Notificación de inicio de fase de construcción",
+        component: "Suelo",
+        phase: "Construcción",
+        requirement:
+          "Comunicar formalmente a la Superintendencia el inicio de la fase de construcción del proyecto.",
+        frequency: "Única vez",
+        dueDate: isoOffset(10),
+        verificationMethod: "Oficio de notificación con acuse de recibo",
+        responsible: "Gerencia Ambiental",
+        sourcePoint: "20",
+      },
+      {
+        id: crypto.randomUUID(),
+        code: "CI-11",
+        title: "Plan de cierre y abandono",
+        component: "Suelo",
+        phase: "Cierre",
+        requirement:
+          "Ejecutar plan de cierre progresivo con restauración morfológica y revegetación del área intervenida.",
+        frequency: "Única vez",
+        dueDate: isoOffset(365),
+        verificationMethod: "Informe de cierre con verificación en terreno",
+        responsible: "Consultora Ambiental",
+        sourcePoint: "21",
       },
     ],
   };
@@ -223,15 +301,16 @@ type Stage = "upload" | "processing" | "review";
 
 const STEPS = [
   "Leyendo documento RCA...",
-  "Identificando componentes ambientales (Fauna, Ruido, Agua)...",
-  "Extrayendo compromisos y plazos de vencimiento...",
-  "Sugiriendo medios de verificación...",
+  "Creando proyecto y resumiendo nombre con IA...",
+  "Analizando compromisos en los puntos 8°, 9°, 10°, 14, 15, 16, 20 y 21...",
+  "Parseando tablas anidadas de los puntos 8°, 9° y 10°...",
+  "Mapeando componente, fase, frecuencia y medio de verificación...",
 ];
 
 function ImportPage() {
   const { can, user } = useAuth();
   const navigate = useNavigate();
-  const { projects, addExtractedRca } = useProjects();
+  const { addProjectWithRca } = useProjects();
 
   const [stage, setStage] = useState<Stage>("upload");
   const [file, setFile] = useState<File | null>(null);
@@ -239,7 +318,6 @@ function ImportPage() {
   const [progress, setProgress] = useState(0);
   const [stepIdx, setStepIdx] = useState(0);
   const [extracted, setExtracted] = useState<ExtractedRca | null>(null);
-  const [targetProjectId, setTargetProjectId] = useState<string>(projects[0].id);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -317,6 +395,7 @@ function ImportPage() {
       toast.error("No hay compromisos para importar");
       return;
     }
+    const projectId = `proj-${Date.now()}`;
     const rcaId = `rca-${Date.now()}`;
     const rca: RCA = {
       id: rcaId,
@@ -326,16 +405,26 @@ function ImportPage() {
         id: `${rcaId}-${c.code}`,
         code: c.code,
         component: c.component,
-        description: `[${c.phase}] ${c.title}. ${c.requirement} Medio de verificación sugerido: ${c.verificationMethod}.`,
+        description: `[Punto ${c.sourcePoint}] [${c.phase}] ${c.title}. ${c.requirement} Medio de verificación sugerido: ${c.verificationMethod}.`,
         frequency: c.frequency,
         dueDate: c.dueDate,
         responsible: c.responsible,
         status: "Pendiente",
       })),
     };
-    addExtractedRca(targetProjectId, rca);
-    toast.success("Compromisos importados", {
-      description: `${rca.commitments.length} compromisos añadidos al dashboard.`,
+    const project: Project = {
+      id: projectId,
+      name: extracted.shortProjectName,
+      location: extracted.region,
+      rcas: [rca],
+    };
+    addProjectWithRca(project);
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem("verderca:selectProject", projectId);
+      window.sessionStorage.setItem("verderca:selectRca", rcaId);
+    }
+    toast.success("Proyecto creado e importado", {
+      description: `${rca.commitments.length} compromisos añadidos a "${project.name}".`,
     });
     navigate({ to: "/" });
   };
@@ -404,9 +493,6 @@ function ImportPage() {
         {stage === "review" && extracted && (
           <ReviewStage
             data={extracted}
-            projects={projects}
-            targetProjectId={targetProjectId}
-            setTargetProjectId={setTargetProjectId}
             onEditMeta={(patch) =>
               setExtracted((prev) => (prev ? { ...prev, ...patch } : prev))
             }
@@ -612,9 +698,6 @@ function ProcessingStage({
 
 function ReviewStage({
   data,
-  projects,
-  targetProjectId,
-  setTargetProjectId,
   onEditMeta,
   onUpdateRow,
   onRemoveRow,
@@ -623,9 +706,6 @@ function ReviewStage({
   canImport,
 }: {
   data: ExtractedRca;
-  projects: { id: string; name: string }[];
-  targetProjectId: string;
-  setTargetProjectId: (v: string) => void;
   onEditMeta: (patch: Partial<ExtractedRca>) => void;
   onUpdateRow: (id: string, patch: Partial<ExtractedCommitment>) => void;
   onRemoveRow: (id: string) => void;
@@ -706,6 +786,7 @@ function ReviewStage({
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="min-w-[90px]">ID</TableHead>
+                <TableHead className="min-w-[90px]">Punto RCA</TableHead>
                 <TableHead className="min-w-[220px]">Título</TableHead>
                 <TableHead className="min-w-[140px]">Componente</TableHead>
                 <TableHead className="min-w-[150px]">Fase</TableHead>
@@ -725,6 +806,11 @@ function ReviewStage({
                       onChange={(e) => onUpdateRow(c.id, { code: e.target.value })}
                       className="h-8 w-20 font-mono text-xs"
                     />
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="font-mono text-xs">
+                      {c.sourcePoint}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Input
@@ -827,7 +913,7 @@ function ReviewStage({
               ))}
               {data.commitments.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-8 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={10} className="py-8 text-center text-sm text-muted-foreground">
                     No hay compromisos. Vuelve a cargar el PDF.
                   </TableCell>
                 </TableRow>
@@ -839,27 +925,18 @@ function ReviewStage({
 
       {/* Approve bar */}
       <Card className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1 sm:min-w-[280px]">
-          <label className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Importar a proyecto
-          </label>
-          <Select value={targetProjectId} onValueChange={setTargetProjectId}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {projects.map((p) => (
-                <SelectItem key={p.id} value={p.id}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Nuevo proyecto
+          </span>
+          <span className="text-sm font-semibold text-foreground">
+            {data.shortProjectName}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Se creará automáticamente con {data.commitments.length} compromisos vinculados a {data.code}.
+          </span>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-3">
-          <span className="text-xs text-muted-foreground">
-            Se creará una nueva RCA con {data.commitments.length} compromisos.
-          </span>
           <Button
             size="lg"
             onClick={onApprove}
