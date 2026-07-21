@@ -6,6 +6,7 @@ type Ctx = {
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   updateCommitment: (projectId: string, rcaId: string, commitmentId: string, patch: Partial<Commitment>) => void;
   addExtractedRca: (projectId: string, rca: RCA) => void;
+  addProjectWithRca: (project: Project) => void;
 };
 
 const ProjectsContext = createContext<Ctx | null>(null);
