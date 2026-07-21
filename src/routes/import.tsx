@@ -786,6 +786,7 @@ function ReviewStage({
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="min-w-[90px]">ID</TableHead>
+                <TableHead className="min-w-[90px]">Punto RCA</TableHead>
                 <TableHead className="min-w-[220px]">Título</TableHead>
                 <TableHead className="min-w-[140px]">Componente</TableHead>
                 <TableHead className="min-w-[150px]">Fase</TableHead>
