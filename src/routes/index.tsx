@@ -52,11 +52,9 @@ import { cn } from "@/lib/utils";
 import {
   COMPONENTS,
   FREQUENCIES,
-  initialProjects,
   type Commitment,
   type EnvComponent,
   type Frequency,
-  type Project,
   type Status,
 } from "@/lib/rca-data";
 import { ROLE_LABELS, ROLE_SHORT, useAuth, type Role } from "@/lib/auth";
