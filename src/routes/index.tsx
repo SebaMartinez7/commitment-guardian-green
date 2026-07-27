@@ -15,6 +15,9 @@ import {
   LogOut,
   ShieldCheck,
   Lock as LockIcon,
+  Download,
+  FileSpreadsheet,
+  FileText,
 } from "lucide-react";
 
 import { toast } from "sonner";
@@ -60,6 +63,7 @@ import {
 } from "@/lib/rca-data";
 import { ROLE_LABELS, ROLE_SHORT, useAuth, type Role } from "@/lib/auth";
 import { useProjects } from "@/lib/projects-store";
+import { exportCommitmentsToExcel, exportCommitmentsToPDF } from "@/lib/export";
 import { LoginScreen } from "@/components/LoginScreen";
 import { AppNav } from "@/components/AppNav";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -612,6 +616,38 @@ function DashboardPage() {
                   <SelectItem value="Vencido">Vencido</SelectItem>
                 </SelectContent>
               </Select>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <Download className="h-4 w-4" />
+                    Exportar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      exportCommitmentsToExcel(selectedProject, selectedRca, filtered);
+                      toast.success("Reporte Excel generado", {
+                        description: `${filtered.length} compromiso(s) exportado(s).`,
+                      });
+                    }}
+                  >
+                    <FileSpreadsheet className="mr-2 h-4 w-4 text-emerald-600" />
+                    Exportar a Excel
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      exportCommitmentsToPDF(selectedProject, selectedRca, filtered);
+                      toast.success("Reporte PDF generado", {
+                        description: `${filtered.length} compromiso(s) exportado(s).`,
+                      });
+                    }}
+                  >
+                    <FileText className="mr-2 h-4 w-4 text-red-600" />
+                    Exportar a PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </section>
 
