@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Leaf, Loader2, Mail, Lock, User as UserIcon, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
@@ -20,6 +21,7 @@ type Mode = "signin" | "signup";
 
 export function LoginScreen() {
   const { signIn, signUp } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>("signin");
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +43,7 @@ export function LoginScreen() {
         await signUp({ name: name.trim(), email, password, role });
         toast.success("Cuenta creada", { description: "Bienvenido a VerdeRCA." });
       }
+      navigate({ to: "/welcome" });
     } catch (err) {
       toast.error("No se pudo continuar", {
         description: err instanceof Error ? err.message : "Intenta nuevamente.",
