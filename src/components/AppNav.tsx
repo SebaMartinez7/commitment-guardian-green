@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LayoutDashboard, FileUp } from "lucide-react";
+import { LayoutDashboard, FileUp, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function AppNav() {
@@ -9,6 +9,14 @@ export function AppNav() {
   const active = "bg-primary/10 text-primary";
   return (
     <nav className="flex items-center gap-1">
+      <Link
+        to="/welcome"
+        className={cn(base, inactive)}
+        activeProps={{ className: cn(base, active) }}
+      >
+        <Home className="h-4 w-4" />
+        <span className="hidden sm:inline">Inicio</span>
+      </Link>
       <Link
         to="/"
         activeOptions={{ exact: true }}
